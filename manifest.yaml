@@ -1,6 +1,6 @@
 ---
 packages:
-- meme_package:
+ meme_package:
   actions:
     spicy_meme_getter:
       location: src/app.js
