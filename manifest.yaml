@@ -1,0 +1,15 @@
+packages:
+  meme_package:
+    actions:
+      SpicyMemeGetter:
+        location: src/app.js
+runtime: nodejs:8
+triggers:
+SpicyTrigger:
+feed: @FEED_BASE@/SpicyMemeGetter
+inputs:
+isJSONData: string
+rules:
+meme_rule:
+  action: SpicyMemeGetter
+  trigger: SpicyTrigger
