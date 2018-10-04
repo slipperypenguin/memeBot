@@ -6,11 +6,11 @@ packages:
       location: src/app.js
       runtime: nodejs:8
   triggers:
-    spicy_trigger:
+    spicy_meme_trigger:
       feed: @FEED_BASE@/spicy_meme_getter
       inputs:
         isJSONData: string
   rules:
     meme_rule:
       action: spicy_meme_getter
-      trigger: spicy_trigger
+      trigger: spicy_meme_trigger
