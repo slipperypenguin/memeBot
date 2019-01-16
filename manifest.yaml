@@ -5,11 +5,24 @@ packages:
     spicy_meme_getter:
       location: src/app.js
       runtime: nodejs:8
+    spicy_meme_xkcd:
+      location: src/xkcd.js
+      runtime: nodejs:10
+    spicy_meme_xkcd_location:
+      location: src/xkcd_location.js
+      runtime: nodejs:10
   triggers:
     spicy_meme_trigger:
       feed: @FEED_BASE@/spicy_meme_getter
       inputs:
         isJSONData: string
+    spicy_meme_trigger_2:
+      feed: @FEED_BASE@/spicy_meme_xkcd
+      inputs:
+        isJSONData: string
+  sequences:
+    spicy_meme_sequence:
+      actions: spicy_meme_xkcd_location, spicy_meme_xkcd
   rules:
     meme_rule:
       action: spicy_meme_getter
