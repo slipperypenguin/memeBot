@@ -111,9 +111,6 @@ function main(params) {
             'Content-Length': Buffer.byteLength(postData)
           }
         };
-        // Replacement paths for env_vars
-        // path: params.SLACK_HOOK_PATH_MEMES,
-        // path: params.SLACK_HOOK_PATH_PETER,
 
         // Setup the request
         req = https.request(options, (res) => {

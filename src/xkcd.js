@@ -38,7 +38,7 @@
 
           // setup post to be title + url
           let post = imgTitle + " " + imgUrl;
-          console.log(post);
+          //console.log(post);
 
           var postData = JSON.stringify({
             text: post
