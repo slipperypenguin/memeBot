@@ -8,9 +8,6 @@
   *
   */
 
-  // https://xkcd.com/rss.xml
-  // https://c.xkcd.com/random/comic/
-  // https://c.xkcd.com/random/comic/info.0.json
   var https = require('https');
 
   function main(params) {

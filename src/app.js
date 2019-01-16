@@ -53,7 +53,7 @@ function main(params) {
         // Slack Setup #spicy_memes
         var options = {
           hostname: 'hooks.slack.com',
-          path: '/services/T71A2UYUT/BCNKD9RUM/AUNrgK8NzEwtwiI9EHSGBNAw',
+          path: params.SLACK_HOOK_PATH_MEMES,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ function main(params) {
         // Slack Setup
         options = {
           hostname: 'hooks.slack.com',
-          path: '/services/T812P9HB3/BCN2NNC65/RZ2JkT4qLTFAYllsoazZCp9U',
+          path: params.SLACK_HOOK_PATH_PETER,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
