@@ -9,7 +9,7 @@ Pulls random memes and delivers them (on a schedule) to a Slack Channel. Sources
 | Source 🔗   |  Day  📅  |  Time (EST)  |  Time (UTC)  |
 |----------|:------:|:----------:|:----------:|
 | Reddit | M-F |    9am, 12pm, 4pm    |    14:00, 17:00, 21:00    |
-| xkcd |   M-F |    10:30am, 2:30pm, 5:30pm    |    15:30, 19:30, 22:30    |
+| xkcd |   M-F |    2:30pm    |    19:30   |
 
 
 ## References

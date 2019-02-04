@@ -11,6 +11,9 @@ packages:
     spicy_meme_xkcd_location:
       location: src/xkcd_location.js
       runtime: nodejs:10
+    spicy_meme_linux:
+      location: src/linuxmasterrace.js
+      runtime: nodejs:10
   sequences:
     spicy_meme_sequence:
       actions: spicy_meme_xkcd_location, spicy_meme_xkcd
@@ -23,6 +26,10 @@ packages:
       feed: @FEED_BASE@/spicy_meme_sequence
       inputs:
         isJSONData: string
+    spicy_meme_trigger_3:
+      feed: @FEED_BASE@/spicy_meme_linux
+      inputs:
+        isJSONData: string
   rules:
     meme_rule:
       action: spicy_meme_getter
@@ -30,3 +37,6 @@ packages:
     meme_rule_2:
       action: spicy_meme_sequence
       trigger: spicy_meme_trigger_2
+    meme_rule_3:
+      action: spicy_meme_linux
+      trigger: spicy_meme_trigger_3
