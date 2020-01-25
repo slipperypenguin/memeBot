@@ -2,7 +2,7 @@
   "name": "memeBot",
   "version": "1.0.0",
   "description": "SlackBot to deliver those spicy memes",
-  "main": "index.js",
+  "main": "src/prgmhumor.js",
   "repository": "https://github.com/slipperypenguin/memeBot.git",
   "license": "MIT",
   "private": false,

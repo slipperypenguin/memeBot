@@ -21,15 +21,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
-      run: |
-        npm ci
-        npm run build --if-present
-        npm test
-      env:
-        CI: true
     - name: r/ProgrammerHumor getter
-      run: node ./src/prgmhumor_getter.js
+      run: node ./src/prgmhumor.js
       env:
         SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_MEMES }}
         SLACK_HOOK_PATH_PENGUINS: ${{ secrets.SLACK_HOOK_PATH_PENGUINS }}
