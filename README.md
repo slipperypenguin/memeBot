@@ -2,7 +2,7 @@
 🌶️ spicy memes
 
 ## About
-Serverless side project built with [IBM Cloud Functions](https://console.bluemix.net/openwhisk). Automated deployments through [IBM Cloud Toolchain](https://console.bluemix.net/devops/getting-started)
+Serverless side project built with [IBM Cloud Functions](https://cloud.ibm.com/functions/), [IBM Cloud Toolchain](https://cloud.ibm.com/devops/getting-started), and [GitHub Actions](https://help.github.com/en/actions).
 Pulls random memes and delivers them (on a schedule) to a Slack Channel. Sources from [r/programmerhumor](https://www.reddit.com/r/ProgrammerHumor) and [xkcd](https://xkcd.com).
 
 ## Schedule
