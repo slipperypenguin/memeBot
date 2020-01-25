@@ -1,10 +1,9 @@
 var https = require('https');
 // actions accept a single parameter, which must be a JSON object.
 // grab a random top meme and post data to slack
-
 function main(params) {
   return new Promise(function(resolve, reject) {
-    https.get("https://www.reddit.com/r/linuxmasterrace/search.json?q=flair%3AMeme&restrict_sr=on&sort=relevance&t=all", (resp) => {
+    https.get("https://www.reddit.com/r/ProgrammerHumor.json", (resp) => {
       let data = '';
       // chunk of data has been recieved.
       resp.on('data', (chunk) => {
@@ -50,6 +49,7 @@ function main(params) {
             'Content-Length': Buffer.byteLength(postData)
           }
         };
+        // console.log(postData);
 
         // setup the request
         var req = https.request(options, (res) => {
