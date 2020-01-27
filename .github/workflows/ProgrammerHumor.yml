@@ -25,4 +25,3 @@ jobs:
       run: node ./src/prgmhumor.js
       env:
         SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_MEMES }}
-        SLACK_HOOK_PATH_PENGUINS: ${{ secrets.SLACK_HOOK_PATH_PENGUINS }}
