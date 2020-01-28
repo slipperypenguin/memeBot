@@ -1,4 +1,4 @@
-name: Linux Getter
+name: r/linuxmasterrace
 
 on:
   schedule:
@@ -19,8 +19,7 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: r/linuxmasterrace getter
+    - name: Linux Getter
       run: node ./src/linuxmasterrace.js
       env:
         SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_MEMES }}
-        SLACK_HOOK_PATH_PENGUINS: ${{ secrets.SLACK_HOOK_PATH_PENGUINS }}
