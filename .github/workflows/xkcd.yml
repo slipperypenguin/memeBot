@@ -1,5 +1,15 @@
 name: xkcd
-on: [push]
+on:
+  push:
+    branches:
+      - master
+      - actions-updates
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "30 19 * * 1-5"
+
 jobs:
 
   build:
@@ -24,8 +34,8 @@ jobs:
             dep ensure
         fi
 
-    - name: Build
-      run: go build -v .
+    - name: Vendor dependencies
+      run: go mod vendor
 
     - name: Run 🤖
       run: go run ./pkg/xkcd.go
