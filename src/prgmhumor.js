@@ -42,7 +42,7 @@ function main(params) {
         // Slack setup #spicy_memes
         var options = {
           hostname: 'hooks.slack.com',
-          path: params.SLACK_HOOK_PATH_MEMES,
+          path: env.SLACK_HOOK_PATH_MEMES,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

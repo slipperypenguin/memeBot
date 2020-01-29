@@ -2,7 +2,7 @@ var https = require('https');
 // actions accept a single parameter, which must be a JSON object.
 // grab a random top meme and post data to slack
 
-function main(params) {
+function main(env) {
   return new Promise(function(resolve, reject) {
     https.get("https://www.reddit.com/r/linuxmasterrace/search.json?q=flair%3AMeme&restrict_sr=on&sort=relevance&t=all", (resp) => {
       let data = '';
@@ -43,7 +43,7 @@ function main(params) {
         // Slack setup #spicy_memes
         var options = {
           hostname: 'hooks.slack.com',
-          path: params.SLACK_HOOK_PATH_MEMES,
+          path: env.SLACK_HOOK_PATH_MEMES,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
