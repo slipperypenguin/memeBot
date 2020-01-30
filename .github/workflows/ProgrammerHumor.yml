@@ -1,6 +1,13 @@
 name: r/ProgrammerHumor
 
 on:
+  push:
+    branches:
+      - master
+      - actions-ph
+  pull_request:
+    branches:
+      - master
   schedule:
     - cron: "0 14 * * 1-5"
     - cron: "0 17 * * 1-5"
@@ -8,20 +15,25 @@ on:
 
 jobs:
   build:
-
+    name: Build
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
       with:
-        node-version: ${{ matrix.node-version }}
-    - name: r/ProgrammerHumor getter
-      run: node ./src/prgmhumor.js
+        go-version: 1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get + Vendor dependencies 🏗
+      run: |
+        go get -v -t -d ./...
+        go mod vendor
+
+    - name: Run 🤖
+      run: go run ./pkg/programmerHumor/prgmhumor.go
       env:
-        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_MEMES }}
+        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_TEST }}
