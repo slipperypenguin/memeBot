@@ -34,6 +34,7 @@ func main() {
 	}
 
 	// GET random xkcd comic
+	// TODO: try client.Head()
 	resp, err := client.Get("https://c.xkcd.com/random/comic/")
 	if err != nil {
 		fmt.Println("Failure : ", err)
@@ -67,10 +68,13 @@ func sendRandomComic(rLoc string) {
 
 	// we should use Slack Webhook to post directly, and have a comment
 	// print to #testing-zone
-  hpath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
-  if !exists {
-    fmt.Println("Failure : env_var not found")
-  }
+	/*
+	hpath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
+	if !exists {
+		fmt.Println("Failure : env_var not found")
+	}
+	*/
+	hpath := "services/TQZHGFGMS/BT6J4F7FA/sXyVRP0mn03xg96mO874F5ZQ"
 	url := "https://hooks.slack.com/" + hpath
 	// setup post to be title + url
 	post := comic.Title + " " + comic.Img
