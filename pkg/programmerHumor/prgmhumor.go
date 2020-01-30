@@ -6,11 +6,11 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
-	//"os"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/nlopes/slack"
-	//"github.com/turnage/redditproto"
 )
 
 type RedditPosts struct {
@@ -21,13 +21,21 @@ type RedditPosts struct {
 		Children []struct {
 			Kind string     `json:"kind,omitempty"`
 			Data RedditPost `json:"data,omitempty"`
-		} `json:"children,omitempty"` //only 25 items return
+		} `json:"children,omitempty"` //only 25 items return by default
 	} `json:"data,omitempty"`
 }
 
 type RedditPost struct {
 	Title string `json:"title,omitempty"`
 	URL   string `json:"url,omitempty"`
+}
+
+// init is invoked before main()
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("No .env file found... using env_var values")
+	}
 }
 
 // main will fetch a random Top Post (image), then post to slack
@@ -43,11 +51,7 @@ func main() {
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	raw := RedditPosts{}
 	json.Unmarshal(respBody, &raw)
-
-	// Display Results
-	fmt.Println("response Status : ", resp.Status)
-	//fmt.Println("response Headers : ", resp.Header)
-	//fmt.Println("response Body : ", string(respBody))
+	fmt.Println("response Status: ", resp.Status)
 
 	// random number from 25 response items
 	postNum := randomPost()
@@ -60,9 +64,18 @@ func main() {
 	fmt.Println("reddit URL: ", string(postURL))
 
 	// print to #testing-zone
-	hpath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
-	if !exists {
-		fmt.Println("Failure : env_var not found")
+	var hpath string
+	testPath, exists := os.LookupEnv("TESTPATH")
+	if exists {
+		fmt.Println("Test .env found 🚧")
+		hpath = testPath
+	}
+
+	// print to #spicy-memes
+	prodPath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
+	if exists {
+		fmt.Println("Prod env_var found 🛳")
+		hpath = prodPath
 	}
 
 	slackurl := "https://hooks.slack.com/" + hpath
@@ -74,7 +87,6 @@ func main() {
 	}
 
 	slack.PostWebhook(slackurl, payload)
-
 	client.CloseIdleConnections()
 }
 
