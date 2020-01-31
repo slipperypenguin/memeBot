@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -38,9 +39,11 @@ func init() {
 	}
 }
 
-// main will fetch a random Top Post (image), then post to slack
+// main will fetch a random Top Post (image/gif), then post to slack
 func main() {
-	client := &http.Client{}
+	client := &http.Client{
+  	Timeout: time.Second * 60,
+	}
 
 	url := "https://www.reddit.com/r/ProgrammerHumor.json"
 	req, _ := http.NewRequest("GET", url, nil)
@@ -56,10 +59,32 @@ func main() {
 	// random number from 25 response items
 	postNum := randomPost()
 	fmt.Println("selected Post: ", postNum)
-
 	processPost := raw.Data.Children[postNum].Data
 	postTitle := processPost.Title
-	postURL := processPost.URL // TODO: check url formats (png, img, jpg, gif)
+	postURL := processPost.URL
+
+	Loop:
+			for {
+				str := strings.Split(postURL, ".")
+				fileExt := str[len(str)-1]
+				switch fileExt {
+				case "gif":
+					break Loop
+				case "img":
+					break Loop
+				case "jpg":
+					break Loop
+				case "png":
+					break Loop
+				default:
+					postNum = randomPost()
+					fmt.Println("selected New Post: ", postNum)
+					processPost = raw.Data.Children[postNum].Data
+					postTitle = processPost.Title
+					postURL = processPost.URL
+				}
+			}
+
 	fmt.Println("reddit Title: ", string(postTitle))
 	fmt.Println("reddit URL: ", string(postURL))
 
@@ -71,7 +96,7 @@ func main() {
 		hpath = testPath
 	}
 
-	// print to #spicy-memes
+	// print to #spicy_memes
 	prodPath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
 	if exists {
 		fmt.Println("Prod env_var found 🛳")
