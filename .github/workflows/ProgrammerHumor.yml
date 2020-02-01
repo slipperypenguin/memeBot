@@ -1,13 +1,6 @@
 name: r/ProgrammerHumor
 
 on:
-  push:
-    branches:
-      - master
-      - actions-ph
-  pull_request:
-    branches:
-      - master
   schedule:
     - cron: "0 14 * * 1-5"
     - cron: "0 17 * * 1-5"
@@ -36,4 +29,4 @@ jobs:
     - name: Run 🤖
       run: go run ./pkg/programmerHumor/prgmhumor.go
       env:
-        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_TEST }}
+        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_MEMES }}

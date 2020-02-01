@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - actions-ph
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "0 17 1 * *" #At noon on the 1st of each month
 
 jobs:
   build:
@@ -26,6 +31,6 @@ jobs:
         go mod vendor
 
     - name: Run 🤖
-      run: go run ./pkg/programmerHumor/prgmhumor.go
+      run: go run ./pkg/linuxmasterrace/linuxmr.go
       env:
         SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_TEST }}

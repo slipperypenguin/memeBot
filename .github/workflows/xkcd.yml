@@ -1,12 +1,5 @@
 name: xkcd
 on:
-  push:
-    branches:
-      - master
-      #- actions-ph
-  pull_request:
-    branches:
-      - master
   schedule:
     - cron: "30 19 * * 1-5"
 
@@ -33,4 +26,4 @@ jobs:
     - name: Run 🤖
       run: go run ./pkg/xkcd/xkcd.go
       env:
-        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_TEST }}
+        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_MEMES }}
