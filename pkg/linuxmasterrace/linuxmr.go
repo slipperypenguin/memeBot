@@ -45,7 +45,7 @@ func main() {
 		Timeout: time.Second * 60,
 	}
 
-	url := "https://www.reddit.com/r/ProgrammerHumor.json"
+	url := "https://www.reddit.com/r/linuxmasterrace/search.json?q=flair%3AMeme&restrict_sr=on&sort=relevance&t=all"
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("User-agent", "test test")
 	resp, _ := client.Do(req)

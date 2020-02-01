@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/nlopes/slack"
 )
 
@@ -22,6 +23,14 @@ type XKCD_COMIC struct {
 	Img        string `json:"img"`
 	Title      string `json:"title"`
 	Day        string `json:"day,omitempty"`
+}
+
+// init is invoked before main()
+func init() {
+	// loads values from .env into the system
+	if err := godotenv.Load(); err != nil {
+		fmt.Println("No .env file found... using env_var values")
+	}
 }
 
 // getRandomComic returns the url of a random xkcd comic. https://xkcd.com/<id>/
@@ -66,15 +75,21 @@ func sendRandomComic(rLoc string) {
 	//fmt.Println("response Body : ", string(respBody))
 	//fmt.Printf("Title: %s, ImgURL: %s, AltText: %s", comic.Title, comic.Img, comic.Alt)
 
-	// we should use Slack Webhook to post directly, and have a comment
 	// print to #testing-zone
-	/*
-	hpath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
-	if !exists {
-		fmt.Println("Failure : env_var not found")
+	var hpath string
+	testPath, exists := os.LookupEnv("TESTPATH")
+	if exists {
+		fmt.Println("Test .env found 🚧")
+		hpath = testPath
 	}
-	*/
-	hpath := "services/TQZHGFGMS/BT6J4F7FA/sXyVRP0mn03xg96mO874F5ZQ"
+
+	// print to #spicy_memes
+	prodPath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
+	if exists {
+		fmt.Println("Prod env_var found 🛳")
+		hpath = prodPath
+	}
+
 	url := "https://hooks.slack.com/" + hpath
 	// setup post to be title + url
 	post := comic.Title + " " + comic.Img
