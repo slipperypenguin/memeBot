@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 )
 
 type RedditPosts struct {

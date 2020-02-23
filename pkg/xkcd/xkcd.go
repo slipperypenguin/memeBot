@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/nlopes/slack"
+	"github.com/slack-go/slack"
 )
 
 type XKCD_COMIC struct {
