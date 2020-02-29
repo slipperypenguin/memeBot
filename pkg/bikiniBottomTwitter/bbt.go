@@ -126,6 +126,16 @@ Loop:
 	}
 	//fmt.Println(string(b))
 
+
+	blocks := make([]slack.Block, 0)
+	blocks = append(blocks, slack.NewSectionBlock(slack.NewTextBlockObject(slack.PlainTextType, string(postTitle), false, false), nil, nil))
+
+	blocks = append(blocks, slack.NewDividerBlock())
+	blocks = append(blocks, slack.NewImageBlock(string(postURL), "test", "", headerText))
+
+
+
+
 	// Use GJSON
 	val := gjson.Get(string(b), "blocks")
 	fmt.Println(val.String())
@@ -144,6 +154,7 @@ Loop:
 	payload := &slack.WebhookMessage{
 		Text:    compactedBuffer.String(),
 		Channel: "#testing-zone",
+		Blocks:	 slack.Blocks{blocks},
 	}
 
 	slack.PostWebhook(slackurl, payload)
