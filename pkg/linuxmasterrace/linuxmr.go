@@ -27,8 +27,10 @@ type RedditPosts struct {
 }
 
 type RedditPost struct {
-	Title string `json:"title,omitempty"`
-	URL   string `json:"url,omitempty"`
+	Title     string `json:"title,omitempty"`
+	URL       string `json:"url,omitempty"`
+	Permalink string `json:"permalink,omitempty"`
+	ID        string `json:"id,omitempty"`
 }
 
 // init is invoked before main()
@@ -62,6 +64,8 @@ func main() {
 	processPost := raw.Data.Children[postNum].Data
 	postTitle := processPost.Title
 	postURL := processPost.URL
+	postPerma := processPost.Permalink
+	postID := processPost.ID
 
 Loop:
 	for {
@@ -82,11 +86,15 @@ Loop:
 			processPost = raw.Data.Children[postNum].Data
 			postTitle = processPost.Title
 			postURL = processPost.URL
+			postPerma = processPost.Permalink
+			postID = processPost.ID
 		}
 	}
 
 	fmt.Println("reddit Title: ", string(postTitle))
-	fmt.Println("reddit URL: ", string(postURL))
+	fmt.Println("image URL: ", string(postURL))
+	fmt.Println("reddit Permalink: ", string(postPerma))
+	fmt.Println("reddit ID: ", string(postID))
 
 	// print to #testing-zone
 	var hpath string
@@ -95,7 +103,6 @@ Loop:
 		fmt.Println("Test .env found 🚧")
 		hpath = testPath
 	}
-
 	// print to #spicy_memes
 	prodPath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
 	if exists {
@@ -103,12 +110,26 @@ Loop:
 		hpath = prodPath
 	}
 
+	// Slack Block API
+	// Heading
+	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
+	headerSection := slack.NewSectionBlock(headerText, nil, nil)
+	// Divider
+	divSection := slack.NewDividerBlock()
+	// Img Heading + Image
+	imgHeaderText := slack.NewTextBlockObject("plain_text", string(postID), false, false)
+	imgSection := slack.NewImageBlock(string(postURL), "test", "", imgHeaderText)
+
+	blocks := make([]slack.Block, 0)
+
+	blocks = append(blocks, headerSection)
+	blocks = append(blocks, divSection)
+	blocks = append(blocks, imgSection)
+
 	slackurl := "https://hooks.slack.com/" + hpath
-	// setup post to be title + url
-	post := postTitle + " " + postURL
 	payload := &slack.WebhookMessage{
-		Text:    string(post),
 		Channel: "#testing-zone",
+		Blocks:  slack.Blocks{blocks},
 	}
 
 	slack.PostWebhook(slackurl, payload)

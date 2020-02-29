@@ -27,10 +27,10 @@ type RedditPosts struct {
 }
 
 type RedditPost struct {
-	Title string `json:"title,omitempty"`
-	URL   string `json:"url,omitempty"`
-	Permalink   string `json:"permalink,omitempty"`
-	ID   string `json:"id,omitempty"`
+	Title     string `json:"title,omitempty"`
+	URL       string `json:"url,omitempty"`
+	Permalink string `json:"permalink,omitempty"`
+	ID        string `json:"id,omitempty"`
 }
 
 // init is invoked before main()
