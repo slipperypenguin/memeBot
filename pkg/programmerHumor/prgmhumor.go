@@ -103,12 +103,23 @@ Loop:
 		hpath = prodPath
 	}
 
+	// Slack Block API
+	// Heading
+	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
+	headerSection := slack.NewSectionBlock(headerText, nil, nil)
+	// Divider + Image
+	divSection := slack.NewDividerBlock()
+	imgSection := slack.NewImageBlock(string(postURL), "test", "", headerText)
+
+	blocks := make([]slack.Block, 0)
+
+	blocks = append(blocks, headerSection)
+	blocks = append(blocks, divSection)
+	blocks = append(blocks, imgSection)
+
 	slackurl := "https://hooks.slack.com/" + hpath
-	// setup post to be title + url
-	post := postTitle + " " + postURL
 	payload := &slack.WebhookMessage{
-		Text:    string(post),
-		Channel: "#testing-zone",
+		Blocks:  slack.Blocks{blocks},
 	}
 
 	slack.PostWebhook(slackurl, payload)

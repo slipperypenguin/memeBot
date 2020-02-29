@@ -29,6 +29,8 @@ type RedditPosts struct {
 type RedditPost struct {
 	Title string `json:"title,omitempty"`
 	URL   string `json:"url,omitempty"`
+	Permalink   string `json:"permalink,omitempty"`
+	ID   string `json:"id,omitempty"`
 }
 
 // init is invoked before main()
@@ -62,6 +64,8 @@ func main() {
 	processPost := raw.Data.Children[postNum].Data
 	postTitle := processPost.Title
 	postURL := processPost.URL
+	postPerma := processPost.Permalink
+	postID := processPost.ID
 
 Loop:
 	for {
@@ -82,11 +86,15 @@ Loop:
 			processPost = raw.Data.Children[postNum].Data
 			postTitle = processPost.Title
 			postURL = processPost.URL
+			postPerma = processPost.Permalink
+			postID = processPost.ID
 		}
 	}
 
 	fmt.Println("reddit Title: ", string(postTitle))
-	fmt.Println("reddit URL: ", string(postURL))
+	fmt.Println("image URL: ", string(postURL))
+	fmt.Println("reddit Permalink: ", string(postPerma))
+	fmt.Println("reddit ID: ", string(postID))
 
 	// print to #testing-zone
 	var hpath string
@@ -106,9 +114,11 @@ Loop:
 	// Heading
 	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
-	// Divider + Image
+	// Divider
 	divSection := slack.NewDividerBlock()
-	imgSection := slack.NewImageBlock(string(postURL), "test", "", headerText)
+	// Img Heading + Image
+	imgHeaderText := slack.NewTextBlockObject("plain_text", string(postID), false, false)
+	imgSection := slack.NewImageBlock(string(postURL), "test", "", imgHeaderText)
 
 	blocks := make([]slack.Block, 0)
 
