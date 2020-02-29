@@ -9,11 +9,11 @@ import (
 	"os"
 	"strings"
 	"time"
-	"bytes"
+	//"bytes"
 
 	"github.com/joho/godotenv"
 	"github.com/slack-go/slack"
-	"github.com/tidwall/gjson"
+	//"github.com/tidwall/gjson"
 )
 
 type RedditPosts struct {
@@ -107,6 +107,8 @@ Loop:
 
 	// Heading
 	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
+
+	/*
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
 	// Divider + Image
 	divSection := slack.NewDividerBlock()
@@ -125,17 +127,16 @@ Loop:
 		return
 	}
 	//fmt.Println(string(b))
-
+	*/
 
 	blocks := make([]slack.Block, 0)
 	blocks = append(blocks, slack.NewSectionBlock(slack.NewTextBlockObject(slack.PlainTextType, string(postTitle), false, false), nil, nil))
-
 	blocks = append(blocks, slack.NewDividerBlock())
 	blocks = append(blocks, slack.NewImageBlock(string(postURL), "test", "", headerText))
 
 
 
-
+	/*
 	// Use GJSON
 	val := gjson.Get(string(b), "blocks")
 	fmt.Println(val.String())
@@ -149,10 +150,11 @@ Loop:
 		return
 	}
 	fmt.Println(compactedBuffer.String())
+	*/
 
 	slackurl := "https://hooks.slack.com/" + hpath
 	payload := &slack.WebhookMessage{
-		Text:    compactedBuffer.String(),
+		//Text:    compactedBuffer.String(),
 		Channel: "#testing-zone",
 		Blocks:	 slack.Blocks{blocks},
 	}
