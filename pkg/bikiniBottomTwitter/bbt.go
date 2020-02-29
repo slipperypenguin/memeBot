@@ -9,11 +9,9 @@ import (
 	"os"
 	"strings"
 	"time"
-	//"bytes"
 
 	"github.com/joho/godotenv"
 	"github.com/slack-go/slack"
-	//"github.com/tidwall/gjson"
 )
 
 type RedditPosts struct {
@@ -97,7 +95,6 @@ Loop:
 		fmt.Println("Test .env found 🚧")
 		hpath = testPath
 	}
-
 	// print to #spicy_memes
 	prodPath, exists := os.LookupEnv("SLACK_HOOK_PATH_MEMES")
 	if exists {
@@ -105,56 +102,22 @@ Loop:
 		hpath = prodPath
 	}
 
+	// Slack Block API
 	// Heading
 	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
-
-	/*
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
 	// Divider + Image
 	divSection := slack.NewDividerBlock()
 	imgSection := slack.NewImageBlock(string(postURL), "test", "", headerText)
 
-	// Build Message with blocks created above
-	msg := slack.NewBlockMessage(
-		headerSection,
-		divSection,
-		imgSection,
-	)
-
-	b, err := json.MarshalIndent(msg, "", "    ")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	//fmt.Println(string(b))
-	*/
-
 	blocks := make([]slack.Block, 0)
-	blocks = append(blocks, slack.NewSectionBlock(slack.NewTextBlockObject(slack.PlainTextType, string(postTitle), false, false), nil, nil))
-	blocks = append(blocks, slack.NewDividerBlock())
-	blocks = append(blocks, slack.NewImageBlock(string(postURL), "test", "", headerText))
 
-
-
-	/*
-	// Use GJSON
-	val := gjson.Get(string(b), "blocks")
-	fmt.Println(val.String())
-	ptch := "{" + `"blocks": ` + val.String() + "}"
-	//fmt.Println(ptch)
-
-	compactedBuffer := new(bytes.Buffer)
-	error := json.Compact(compactedBuffer, []byte(ptch))
-	if error != nil {
-		fmt.Println(error)
-		return
-	}
-	fmt.Println(compactedBuffer.String())
-	*/
+	blocks = append(blocks, headerSection)
+	blocks = append(blocks, divSection)
+	blocks = append(blocks, imgSection)
 
 	slackurl := "https://hooks.slack.com/" + hpath
 	payload := &slack.WebhookMessage{
-		//Text:    compactedBuffer.String(),
 		Channel: "#testing-zone",
 		Blocks:	 slack.Blocks{blocks},
 	}
