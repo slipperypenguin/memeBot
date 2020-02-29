@@ -1,0 +1,36 @@
+name: r/linuxmasterrace
+
+on:
+  push:
+    branches:
+      - r/BBT
+  pull_request:
+    branches:
+      - master
+  schedule:
+    - cron: "0 17 15 * *" #At noon on the 15th of each month
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.14
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.14
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Get + Vendor dependencies 🏗
+      run: |
+        go get -v -t -d ./...
+        go mod vendor
+
+    - name: Run 🤖
+      run: go run ./pkg/linuxmasterrace/linuxmr.go
+      env:
+        SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_TEST }}
