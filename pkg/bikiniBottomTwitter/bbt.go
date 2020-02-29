@@ -119,7 +119,7 @@ Loop:
 	slackurl := "https://hooks.slack.com/" + hpath
 	payload := &slack.WebhookMessage{
 		Channel: "#testing-zone",
-		Blocks:	 slack.Blocks{blocks},
+		Blocks:  slack.Blocks{blocks},
 	}
 
 	slack.PostWebhook(slackurl, payload)
