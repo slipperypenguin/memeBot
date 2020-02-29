@@ -1,14 +1,9 @@
 name: r/BikiniBottomTwitter
 
 on:
-  push:
-    branches:
-      - r/BBT
-  pull_request:
-    branches:
-      - master
   schedule:
-    - cron: "0 17 15 * *" #At noon on the 15th of each month
+    - cron: "0 19 * * 6,0" #At 2pm every Weekend
+    - cron: "30 17 * * FRI" #At 12:30pm every Friday
 
 jobs:
   build:
