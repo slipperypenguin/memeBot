@@ -1,9 +1,7 @@
 # memeBot
 🌶️ spicy memes
 
-## About
-Serverless side project built with [IBM Cloud Functions](https://cloud.ibm.com/functions/), [IBM Cloud Toolchain](https://cloud.ibm.com/devops/getting-started), and [GitHub Actions](https://help.github.com/en/actions).
-Pulls random memes and delivers them (on a schedule) to a Slack Channel. Sources from [r/programmerhumor](https://www.reddit.com/r/ProgrammerHumor) and [xkcd](https://xkcd.com).
+Serverless side project that pulls random memes and [delivers](https://help.github.com/en/actions) them (on a schedule) to a Slack Channel.
 
 ## Schedule
 | Source 🔗   |  Day  📅  |  Time (EST)  |  Time (UTC)  |
@@ -12,6 +10,8 @@ Pulls random memes and delivers them (on a schedule) to a Slack Channel. Sources
 | xkcd |   M-F |    2:30pm    |    19:30   |
 
 
-## References
-- [manifest examples](https://github.com/apache/incubator-openwhisk-wskdeploy/blob/master/docs/programming_guide.md#wskdeploy-utility-by-example)
-- [IBM Cloud Functions Documentation](https://console.bluemix.net/docs/openwhisk/index.html#index)
+## Sources
+- [r/programmerhumor](https://www.reddit.com/r/ProgrammerHumor)
+- [r/linuxmasterrace](https://www.reddit.com/r/linuxmasterrace)
+- [r/BikiniBottomTwitter](https://www.reddit.com/r/BikiniBottomTwitter)
+- [xkcd](https://xkcd.com)
