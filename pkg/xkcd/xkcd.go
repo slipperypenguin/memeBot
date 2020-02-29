@@ -70,10 +70,13 @@ func sendRandomComic(rLoc string) {
 	json.Unmarshal(respBody, &comic)
 
 	// Display Results
-	//fmt.Println("response Status : ", resp.Status)
+	fmt.Println("response Status : ", resp.Status)
 	//fmt.Println("response Headers : ", resp.Header)
 	//fmt.Println("response Body : ", string(respBody))
 	//fmt.Printf("Title: %s, ImgURL: %s, AltText: %s", comic.Title, comic.Img, comic.Alt)
+	fmt.Println("xkcd Title: ", comic.Title)
+	fmt.Println("image URL: ", comic.Img)
+	fmt.Println("xkcd ID: ", comic.Num)
 
 	// print to #testing-zone
 	var hpath string
@@ -90,13 +93,28 @@ func sendRandomComic(rLoc string) {
 		hpath = prodPath
 	}
 
-	url := "https://hooks.slack.com/" + hpath
-	// setup post to be title + url
-	post := comic.Title + " " + comic.Img
+	// Slack Block API
+	// Heading
+	headerText := slack.NewTextBlockObject("plain_text", string(comic.Alt), false, false)
+	headerSection := slack.NewSectionBlock(headerText, nil, nil)
+	// Divider
+	divSection := slack.NewDividerBlock()
+	// Img Heading + Image
+	imgHeaderText := slack.NewTextBlockObject("plain_text", string(comic.Title), false, false)
+	imgSection := slack.NewImageBlock(string(comic.Img), string(comic.Alt), "", imgHeaderText)
+
+	blocks := make([]slack.Block, 0)
+
+	blocks = append(blocks, headerSection)
+	blocks = append(blocks, divSection)
+	blocks = append(blocks, imgSection)
+
+	slackurl := "https://hooks.slack.com/" + hpath
 	payload := &slack.WebhookMessage{
-		Text:    string(post),
 		Channel: "#testing-zone",
+		Blocks:  slack.Blocks{blocks},
 	}
 
-	slack.PostWebhook(url, payload)
+	slack.PostWebhook(slackurl, payload)
+	client.CloseIdleConnections()
 }
