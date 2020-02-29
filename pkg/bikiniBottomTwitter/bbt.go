@@ -9,9 +9,11 @@ import (
 	"os"
 	"strings"
 	"time"
+	"bytes"
 
 	"github.com/joho/godotenv"
 	"github.com/slack-go/slack"
+	"github.com/tidwall/gjson"
 )
 
 type RedditPosts struct {
@@ -103,11 +105,60 @@ Loop:
 		hpath = prodPath
 	}
 
+	// Heading
+	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
+	headerSection := slack.NewSectionBlock(headerText, nil, nil)
+	// Actual Post
+	//comicImg := slack.NewTextBlockObject("mrkdwn", string(postURL), false, false)
+	//imgSection := slack.NewSectionBlock(comicImg, nil, nil)
+	// Divider
+	divSection := slack.NewDividerBlock()
+	// Image
+	imgB := slack.NewImageBlock(string(postURL), "test", "", headerText)
+	// Alt Text
+	//aText := slack.NewTextBlockObject("mrkdwn", comic.Alt, false, false)
+	//altTextSection := slack.NewSectionBlock(aText, nil, nil)
+
+	// Build Message with blocks created above
+	msg := slack.NewBlockMessage(
+		headerSection,
+		//imgSection,
+		divSection,
+		imgB,
+	)
+
+	b, err := json.MarshalIndent(msg, "", "    ")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(string(b))
+
+	// Use GJSON
+	val := gjson.Get(string(b), "blocks")
+	println(val.String())
+	ptch := "{" + `"blocks": ` + val.String() + "}"
+	fmt.Println(ptch)
+
+	compactedBuffer := new(bytes.Buffer)
+	errr := json.Compact(compactedBuffer, []byte(ptch))
+	//b2, err := json.Compact(compactedBuffer, []byte(ptch))
+	if errr != nil {
+		fmt.Println(errr)
+		return
+	}
+
+
+	fmt.Println(compactedBuffer.String())
+
+
 	slackurl := "https://hooks.slack.com/" + hpath
 	// setup post to be title + url
-	post := postTitle + " " + postURL
+	//post := postTitle + " " + postURL
 	payload := &slack.WebhookMessage{
-		Text:    string(post),
+		//Text:    string(ptch),
+		Text:    compactedBuffer.String(),
 		Channel: "#testing-zone",
 	}
 
