@@ -108,23 +108,15 @@ Loop:
 	// Heading
 	headerText := slack.NewTextBlockObject("plain_text", string(postTitle), false, false)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
-	// Actual Post
-	//comicImg := slack.NewTextBlockObject("mrkdwn", string(postURL), false, false)
-	//imgSection := slack.NewSectionBlock(comicImg, nil, nil)
-	// Divider
+	// Divider + Image
 	divSection := slack.NewDividerBlock()
-	// Image
-	imgB := slack.NewImageBlock(string(postURL), "test", "", headerText)
-	// Alt Text
-	//aText := slack.NewTextBlockObject("mrkdwn", comic.Alt, false, false)
-	//altTextSection := slack.NewSectionBlock(aText, nil, nil)
+	imgSection := slack.NewImageBlock(string(postURL), "test", "", headerText)
 
 	// Build Message with blocks created above
 	msg := slack.NewBlockMessage(
 		headerSection,
-		//imgSection,
 		divSection,
-		imgB,
+		imgSection,
 	)
 
 	b, err := json.MarshalIndent(msg, "", "    ")
@@ -132,32 +124,24 @@ Loop:
 		fmt.Println(err)
 		return
 	}
-
-	fmt.Println(string(b))
+	//fmt.Println(string(b))
 
 	// Use GJSON
 	val := gjson.Get(string(b), "blocks")
-	println(val.String())
+	fmt.Println(val.String())
 	ptch := "{" + `"blocks": ` + val.String() + "}"
-	fmt.Println(ptch)
+	//fmt.Println(ptch)
 
 	compactedBuffer := new(bytes.Buffer)
-	errr := json.Compact(compactedBuffer, []byte(ptch))
-	//b2, err := json.Compact(compactedBuffer, []byte(ptch))
-	if errr != nil {
-		fmt.Println(errr)
+	error := json.Compact(compactedBuffer, []byte(ptch))
+	if error != nil {
+		fmt.Println(error)
 		return
 	}
-
-
 	fmt.Println(compactedBuffer.String())
 
-
 	slackurl := "https://hooks.slack.com/" + hpath
-	// setup post to be title + url
-	//post := postTitle + " " + postURL
 	payload := &slack.WebhookMessage{
-		//Text:    string(ptch),
 		Text:    compactedBuffer.String(),
 		Channel: "#testing-zone",
 	}
