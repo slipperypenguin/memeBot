@@ -28,9 +28,8 @@ jobs:
     - name: Get + Vendor dependencies 🏗
       run: |
         go get -v -t -d ./...
-        go mod vendor
 
     - name: Run 🤖
-      run: go run ./pkg/linuxmasterrace/linuxmr.go
+      run: go run ./pkg/bikiniBottomTwitter/bbt.go
       env:
         SLACK_HOOK_PATH_MEMES: ${{ secrets.SLACK_HOOK_PATH_TEST }}
