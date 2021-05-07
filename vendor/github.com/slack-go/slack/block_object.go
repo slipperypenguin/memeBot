@@ -145,6 +145,14 @@ func NewTextBlockObject(elementType, text string, emoji, verbatim bool) *TextBlo
 	}
 }
 
+// BlockType returns the type of the block
+func (t TextBlockObject) BlockType() MessageBlockType {
+	if t.Type == "mrkdwn" {
+		return MarkdownType
+	}
+	return PlainTextType
+}
+
 // ConfirmationBlockObject defines a dialog that provides a confirmation step to
 // any interactive element. This dialog will ask the user to confirm their action by
 // offering a confirm and deny buttons.
@@ -155,11 +163,17 @@ type ConfirmationBlockObject struct {
 	Text    *TextBlockObject `json:"text"`
 	Confirm *TextBlockObject `json:"confirm"`
 	Deny    *TextBlockObject `json:"deny"`
+	Style   Style            `json:"style,omitempty"`
 }
 
 // validateType enforces block objects for element and block parameters
 func (s ConfirmationBlockObject) validateType() MessageObjectType {
 	return motConfirmation
+}
+
+// add styling to confirmation object
+func (s *ConfirmationBlockObject) WithStyle(style Style) {
+	s.Style = style
 }
 
 // NewConfirmationBlockObject returns an instance of a new Confirmation Block Object
@@ -176,16 +190,18 @@ func NewConfirmationBlockObject(title, text, confirm, deny *TextBlockObject) *Co
 //
 // More Information: https://api.slack.com/reference/messaging/composition-objects#option
 type OptionBlockObject struct {
-	Text  *TextBlockObject `json:"text"`
-	Value string           `json:"value"`
-	URL   string           `json:"url,omitempty"`
+	Text        *TextBlockObject `json:"text"`
+	Value       string           `json:"value"`
+	Description *TextBlockObject `json:"description,omitempty"`
+	URL         string           `json:"url,omitempty"`
 }
 
 // NewOptionBlockObject returns an instance of a new Option Block Element
-func NewOptionBlockObject(value string, text *TextBlockObject) *OptionBlockObject {
+func NewOptionBlockObject(value string, text, description *TextBlockObject) *OptionBlockObject {
 	return &OptionBlockObject{
-		Text:  text,
-		Value: value,
+		Text:        text,
+		Value:       value,
+		Description: description,
 	}
 }
 
