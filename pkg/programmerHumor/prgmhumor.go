@@ -55,7 +55,11 @@ func main() {
 	// Read Response Body
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	raw := RedditPosts{}
-	json.Unmarshal(respBody, &raw)
+	err := json.Unmarshal(respBody, &raw)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("response Status: ", resp.Status)
 
 	// random number from 25 response items
