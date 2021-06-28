@@ -55,7 +55,11 @@ func main() {
 	// Read Response Body
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	raw := RedditPosts{}
-	json.Unmarshal(respBody, &raw)
+	err := json.Unmarshal(respBody, &raw)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("response Status: ", resp.Status)
 
 	// random number from 25 response items
@@ -127,12 +131,16 @@ Loop:
 	blocks = append(blocks, imgSection)
 
 	slackurl := "https://hooks.slack.com/" + hpath
-	payload := &slack.WebhookMessage{
+	payload := slack.WebhookMessage{
 		Channel: "#testing-zone",
-		Blocks:  slack.Blocks{blocks},
+		Blocks:  &slack.Blocks{BlockSet: blocks},
 	}
 
-	slack.PostWebhook(slackurl, payload)
+	err = slack.PostWebhook(slackurl, &payload)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	client.CloseIdleConnections()
 }
 
