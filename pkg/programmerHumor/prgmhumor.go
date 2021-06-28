@@ -131,12 +131,12 @@ Loop:
 	blocks = append(blocks, imgSection)
 
 	slackurl := "https://hooks.slack.com/" + hpath
-	payload := &slack.WebhookMessage{
+	payload := slack.WebhookMessage{
 		Channel: "#testing-zone",
-		Blocks:  slack.Blocks{blocks},
+		Blocks:  &slack.Blocks{BlockSet: blocks},
 	}
 
-	slack.PostWebhook(slackurl, payload)
+	slack.PostWebhook(slackurl, &payload)
 	client.CloseIdleConnections()
 }
 
