@@ -50,7 +50,7 @@ func main() {
 
 	url := "https://www.reddit.com/r/ProgrammerHumor.json"
 	req, _ := http.NewRequest("GET", url, nil)
-	//req.Header.Add("User-agent", "test test")
+	req.Header.Add("User-agent", "memebot")
 	req.Header.Add("Content-Type", "application/json")
 	resp, _ := client.Do(req)
 
