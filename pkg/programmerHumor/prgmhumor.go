@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -17,20 +18,20 @@ import (
 type RedditPosts struct {
 	Kind string `json:"kind,omitempty"`
 	Data struct {
-		Modhash  string `json:"id,omitempty"`
+		Modhash  string `json:"modhash,omitempty"`
 		Dist     int    `json:"dist,omitempty"`
 		Children []struct {
-			Kind string     `json:"kind,omitempty"`
-			Data RedditPost `json:"data,omitempty"`
+			Kind string     `json:"kind"`
+			Data RedditPost `json:"data"`
 		} `json:"children,omitempty"` //only 25 items return by default
 	} `json:"data,omitempty"`
 }
 
 type RedditPost struct {
-	Title     string `json:"title,omitempty"`
-	URL       string `json:"url,omitempty"`
-	Permalink string `json:"permalink,omitempty"`
-	ID        string `json:"id,omitempty"`
+	Title     string `json:"title"`
+	Url       string `json:"url"`
+	Permalink string `json:"permalink"`
+	Id        string `json:"id"`
 }
 
 // init is invoked before main()
@@ -49,13 +50,26 @@ func main() {
 
 	url := "https://www.reddit.com/r/ProgrammerHumor.json"
 	req, _ := http.NewRequest("GET", url, nil)
-	req.Header.Add("User-agent", "test test")
+	req.Header.Add("User-agent", "memebot")
+	req.Header.Add("Content-Type", "application/json")
 	resp, _ := client.Do(req)
 
 	// Read Response Body
-	respBody, _ := ioutil.ReadAll(resp.Body)
+	respBody, err := ioutil.ReadAll(resp.Body)
+	err = resp.Body.Close()
+	if err != nil {
+		log.Printf("verbose error info: %#v", err)
+		fmt.Printf("Cannot read response: %v\n", err)
+		return
+	}
 	raw := RedditPosts{}
-	json.Unmarshal(respBody, &raw)
+	err = json.Unmarshal(respBody, &raw)
+	if err != nil {
+		log.Printf("verbose error info: %#v", err)
+		fmt.Printf("Cannot unmarshall: %v\n", err)
+		log.Printf("raw body: %#v", &raw)
+		return
+	}
 	fmt.Println("response Status: ", resp.Status)
 
 	// random number from 25 response items
@@ -63,9 +77,9 @@ func main() {
 	fmt.Println("selected Post: ", postNum)
 	processPost := raw.Data.Children[postNum].Data
 	postTitle := processPost.Title
-	postURL := processPost.URL
+	postURL := processPost.Url
 	postPerma := processPost.Permalink
-	postID := processPost.ID
+	postID := processPost.Id
 
 Loop:
 	for {
@@ -85,9 +99,9 @@ Loop:
 			fmt.Println("selected New Post: ", postNum)
 			processPost = raw.Data.Children[postNum].Data
 			postTitle = processPost.Title
-			postURL = processPost.URL
+			postURL = processPost.Url
 			postPerma = processPost.Permalink
-			postID = processPost.ID
+			postID = processPost.Id
 		}
 	}
 
@@ -127,12 +141,17 @@ Loop:
 	blocks = append(blocks, imgSection)
 
 	slackurl := "https://hooks.slack.com/" + hpath
-	payload := &slack.WebhookMessage{
+	payload := slack.WebhookMessage{
 		Channel: "#testing-zone",
-		Blocks:  slack.Blocks{blocks},
+		Blocks:  &slack.Blocks{BlockSet: blocks},
 	}
+	fmt.Println(payload)
 
-	slack.PostWebhook(slackurl, payload)
+	err = slack.PostWebhook(slackurl, &payload)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	client.CloseIdleConnections()
 }
 

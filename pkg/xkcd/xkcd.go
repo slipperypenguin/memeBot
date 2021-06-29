@@ -67,7 +67,11 @@ func sendRandomComic(rLoc string) {
 	// Read Response Body
 	respBody, _ := ioutil.ReadAll(resp.Body)
 	comic := XKCD_COMIC{}
-	json.Unmarshal(respBody, &comic)
+	err = json.Unmarshal(respBody, &comic)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	// Display Results
 	fmt.Println("response Status : ", resp.Status)
@@ -110,11 +114,15 @@ func sendRandomComic(rLoc string) {
 	blocks = append(blocks, imgSection)
 
 	slackurl := "https://hooks.slack.com/" + hpath
-	payload := &slack.WebhookMessage{
+	payload := slack.WebhookMessage{
 		Channel: "#testing-zone",
-		Blocks:  slack.Blocks{blocks},
+		Blocks:  &slack.Blocks{BlockSet: blocks},
 	}
 
-	slack.PostWebhook(slackurl, payload)
+	err = slack.PostWebhook(slackurl, &payload)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	client.CloseIdleConnections()
 }
